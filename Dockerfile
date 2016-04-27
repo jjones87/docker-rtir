@@ -19,11 +19,14 @@ RUN apt-get install -qq make apache2 libapache2-mod-fcgid libssl-dev libyaml-per
  libgd-dev libgd-gd2-perl libgraphviz-perl supervisor
 
 # Add stuff
-RUN wget -O /tmp/rt-4.2.12 https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz && \
-wget -O /tmp/RT-IR-3.2.0 https://download.bestpractical.com/pub/rt/release/RT-IR-3.2.0.tar.gz && \
-git clone https://github.com/dlee35/docker-rtir.git
+RUN wget https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz && \
+ wget https://download.bestpractical.com/pub/rt/release/RT-IR-3.2.0.tar.gz && \
+ git clone https://github.com/dlee35/docker-rtir.git
 
-WORKDIR /tmp/rt-4.2.12
+RUN tar xzf rt-4.2.12.tar.gz && \
+ tar xzf RT-IR-3.2.0.tar.gz
+
+WORKDIR /rt-4.2.12
 
 RUN ./configure --enable-graphviz --enable-gd
 
@@ -53,15 +56,15 @@ mv /docker-rtir/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
 RUN a2enmod ssl fcgid && \
  a2ensite rt && \
- apachectl configtest && \
+ apachectl configtest 
 
-WORKDIR /tmp/RT-IR-3.2.0
+WORKDIR /RT-IR-3.2.0
 
 RUN service mysql start && \
  perl Makefile.PL && \
  make install && \
  echo | make initdb &&\
- rm -rf /tmp/*
+ rm -rf /rt-4.2.12 /RT-IR-3.2.0
 
 EXPOSE 443
 
