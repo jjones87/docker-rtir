@@ -11,6 +11,8 @@ MAINTAINER Dustin Lee
 
 ################## BEGIN INSTALLATION ######################
 
+VOLUME ["/var/lib/mysql"]
+
 # Need to run mysql without prompt for password
 RUN apt-get -qq update && export DEBIAN_FRONTEND=noninteractive && apt-get install -qq \
  mysql-server mysql-client libmysqlclient-dev wget git
@@ -64,7 +66,10 @@ RUN service mysql start && \
  perl Makefile.PL && \
  make install && \
  echo | make initdb &&\
+ cd / && \
  rm -rf /rt-4.2.12 /RT-IR-3.2.0
+
+WORKDIR /opt/rt4
 
 EXPOSE 443
 
