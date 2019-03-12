@@ -13,7 +13,7 @@ MAINTAINER Dustin Lee
 
 # Need to update
 RUN apt-get -qq update && export DEBIAN_FRONTEND=noninteractive && apt-get install -qq \
- mysql-server mysql-client libmysqlclient-dev wget git
+ mysql-server mysql-client libmysqlclient-dev wget git tzdata
 
 RUN apt-get install -qq make apache2 libapache2-mod-fcgid libssl-dev libyaml-perl \
  libgd-dev libgd-gd2-perl libgraphviz-perl supervisor
