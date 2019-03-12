@@ -42,7 +42,7 @@ RUN echo -e '\n\n\n\n' | make fixdeps && \
 
 RUN make install && \
  service mysql start && \
- make initialize-database
+ echo | make initialize-database
 
 # Need to adjust all configuration files to support what I'm trying to do
 # Followed this blog:
