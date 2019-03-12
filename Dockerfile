@@ -4,7 +4,7 @@
 ############################################################
 
 # Set the base image to Ubuntu
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 # File Author / Maintainer
 MAINTAINER Dustin Lee
@@ -19,15 +19,15 @@ RUN apt-get install -qq make apache2 libapache2-mod-fcgid libssl-dev libyaml-per
  libgd-dev libgd-gd2-perl libgraphviz-perl supervisor
 
 # Add the required packages and files
-RUN wget https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz && \
- wget https://download.bestpractical.com/pub/rt/release/RT-IR-3.2.0.tar.gz && \
+RUN wget https://download.bestpractical.com/pub/rt/release/rt-4.2.16.tar.gz && \
+ wget https://download.bestpractical.com/pub/rt/release/RT-IR-3.2.1.tar.gz && \
  git clone https://github.com/dlee35/docker-rtir.git
 
 # Request extraction
-RUN tar xzf rt-4.2.12.tar.gz && \
- tar xzf RT-IR-3.2.0.tar.gz
+RUN tar xzf rt-4.2.16.tar.gz && \
+ tar xzf RT-IR-3.2.1.tar.gz
 
-WORKDIR /rt-4.2.12
+WORKDIR /rt-4.2.16
 
 RUN ./configure --enable-graphviz --enable-gd
 
@@ -62,7 +62,7 @@ RUN a2enmod ssl fcgid && \
  a2ensite rt && \
  apachectl configtest 
 
-WORKDIR /RT-IR-3.2.0
+WORKDIR /RT-IR-3.2.1
 
 # Perl goodness is happening here
 RUN service mysql start && \
@@ -70,7 +70,7 @@ RUN service mysql start && \
  make install && \
  echo | make initdb &&\
  cd / && \
- rm -rf /rt-4.2.12 /RT-IR-3.2.0
+ rm -rf /rt-4.2.16 /RT-IR-3.2.1
 
 WORKDIR /opt/rt4
 
