@@ -19,24 +19,26 @@ RUN apt-get install -qq make apache2 libapache2-mod-fcgid libssl-dev libyaml-per
  libgd-dev libgd-gd2-perl libgraphviz-perl supervisor
 
 # Add the required packages and files
-RUN wget https://download.bestpractical.com/pub/rt/release/rt-4.2.16.tar.gz && \
- wget https://download.bestpractical.com/pub/rt/release/RT-IR-3.2.1.tar.gz && \
+RUN wget https://download.bestpractical.com/pub/rt/release/rt-4.4.4.tar.gz && \
+ wget https://download.bestpractical.com/pub/rt/release/RT-IR-4.0.1.tar.gz && \
  git clone https://github.com/dlee35/docker-rtir.git
 
 # Request extraction
-RUN tar xzf rt-4.2.16.tar.gz && \
- tar xzf RT-IR-3.2.1.tar.gz
+RUN tar xzf rt-4.4.4.tar.gz && \
+ tar xzf RT-IR-4.0.1.tar.gz
 
-WORKDIR /rt-4.2.16
+WORKDIR /rt-4.4.4
 
 RUN ./configure --enable-graphviz --enable-gd
 
 # Oh boy... CPAN
-RUN (echo yes;echo yes;echo o conf prerequisites_policy 'follow';echo o conf \
+RUN (echo yes;echo o conf prerequisites_policy 'follow';echo o conf \
  build_requires_install_policy yes;echo o conf commit)|cpan
 
 # I was asked a y/N question during fixdeps... need to auto accept
-RUN echo N | make fixdeps && make testdeps
+RUN echo -e '\n\n\n\n' | make fixdeps && \
+ service mysql start && \
+ make testdeps
 
 RUN make install && \
  service mysql start && \
@@ -62,7 +64,7 @@ RUN a2enmod ssl fcgid && \
  a2ensite rt && \
  apachectl configtest 
 
-WORKDIR /RT-IR-3.2.1
+WORKDIR /RT-IR-4.0.1
 
 # Perl goodness is happening here
 RUN service mysql start && \
@@ -70,7 +72,7 @@ RUN service mysql start && \
  make install && \
  echo | make initdb &&\
  cd / && \
- rm -rf /rt-4.2.16 /RT-IR-3.2.1
+ rm -rf /rt-4.4.4 /RT-IR-4.0.1
 
 WORKDIR /opt/rt4
 
