@@ -9,4 +9,4 @@ User/Pass: root/password
 
 This is for testing so assume no security measures exist!
 
-docker run -d -p 443:443 --name rtir jjones/rtir
+docker run -d -p 443:443 --name rtir jjones87/rtir
