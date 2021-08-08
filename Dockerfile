@@ -76,6 +76,6 @@ RUN service mysql start && \
 
 WORKDIR /opt/rt4
 
-EXPOSE 443
+EXPOSE 80
 
 CMD ["/usr/bin/supervisord"]
